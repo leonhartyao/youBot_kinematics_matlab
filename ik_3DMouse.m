@@ -88,6 +88,7 @@ function ik_3DMouse()
 		fprintf('\n');
         if res.pressEvents(1) > 0
             closeHandler(ax); 
+            return
         end
         
         % parameter for tuning 3D mouse sencitivity
