@@ -15,7 +15,7 @@ function robot = youBot(d1, a1, a2, a3, d5)
 	robot = struct();
 	robot.org0 = triade(T_unity(), [], 4, 0.1);
 	robot.link0 = createObject(geoCylinder(7, 7.2));
-%     robot.link0.setWireframeColor([0 0.2 0]);
+    robot.link0.setWireframeColor([0 0.2 0]);
 
 
 	%t = linspace(-pi, 0, 17);
@@ -34,8 +34,13 @@ function robot = youBot(d1, a1, a2, a3, d5)
 	robot.org4 = triade(T_unity(), [], 6, 0.1);
     
     robot.org5 = triade(T_unity(), [], 4, 0.1);
-	robot.link4 = createObject(transform(T_shift(-0.3*width/2, -1.5, -d5), geoBox(0.3*width, 3,d5)));
+	link4_1 = createObject(transform(T_shift(-0.3*width/2, -1.5, -d5), geoBox(0.3*width, 3, d5-3)));
+    link4_2 = createObject(transform(T_shift(-0.5, -3, -3), geoBox(1, 6, 1)));
+    link4_3 = createObject(transform(T_shift(-0.5, 2, -2), geoBox(1, 1, 2)));
+    link4_4 = createObject(transform(T_shift(-0.5, -3, -2), geoBox(1, 1, 2)));
+    robot.link4 = createObjectGroup(link4_1,link4_2,link4_3,link4_4);
     robot.link4.setWireframeColor([0 0.2 0]);
+    
     
     robot.setJoins = @setJoins;
 
@@ -45,8 +50,8 @@ function robot = youBot(d1, a1, a2, a3, d5)
 	end
 	robot.setTransparency = @setTransparency;
 	function setTransparency(t)
-% 		robot.link0.setTransparency(t);
-% 		robot.link1.setTransparency(t);
+		robot.link0.setTransparency(t);
+		robot.link1.setTransparency(t);
  		robot.link2.setTransparency(t);
  		robot.link3.setTransparency(t);
  		robot.link4.setTransparency(t);
@@ -97,7 +102,7 @@ function robot = youBot(d1, a1, a2, a3, d5)
 		robot.link3.place(T_3_0);
 		T_4_0 = T_3_0 * T_4_3;
  		robot.org4.place(T_4_0);
-% 		robot.link4.place(T_4_0);
+
 		T_5_0 = T_4_0 * T_5_4;
 		robot.org5.place(T_5_0);
 		robot.link4.place(T_5_0);
