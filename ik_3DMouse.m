@@ -183,6 +183,7 @@ function ik_3DMouse()
         % check if the goal positon can be reached
         if sqrt(pt_x^2+pt_y^2)>(a2+a3+d5)
             errordlg('Out of work space!');
+            uiwait;
             theta=[];
             return
         end
@@ -194,6 +195,7 @@ function ik_3DMouse()
         % check if the goal position can be reached at all
         if sqrt(pw_x^2 + pw_y^2)>(a2+a3) || sqrt(pw_x^2 + pw_y^2)<abs(a2-a3)
             errordlg('goal position cannot be reached!');
+            uiwait;
             theta=[];
             return
         end
