@@ -33,8 +33,8 @@ function ik_demo()
 	[hXSlider, hXText] = createSlider('X', 0, 80, -54.05, 54.05, -5, @updateFromSliders, [1 0 0]);
 	[hYSlider, hYText] = createSlider('Y', 0, 60, -54.05, 54.05, 0, @updateFromSliders, [0 1 0]);
 	[hZSlider, hZText] = createSlider('Z', 0, 40, -20.5, 65.45, 44, @updateFromSliders, [0 0 1]);
-	[hPhiSlider, hPhiText] = createSlider('φ', 0, 20, -180, 180, 65, @updateFromSliders, [0 0 0]);
-	[hGammaSlider, hGammaText] = createSlider('γ', 0, 0, -150, 150, 0, @updateFromSliders, [0 0 0]);
+	[hPhiSlider, hPhiText] = createSlider('Pitch', 0, 20, -180, 180, 65, @updateFromSliders, [0 0 0]);
+	[hGammaSlider, hGammaText] = createSlider('Roll', 0, 0, -150, 150, 0, @updateFromSliders, [0 0 0]);
 	    
     updateFromSliders();	        
 

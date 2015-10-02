@@ -33,13 +33,13 @@ function ik_3DMouse()
 	robot.setTransparency(0.5);
     
 	% UI controls for display
-    hArmConfig1 = uicontrol('Style', 'checkbox', 'String', 'k_arm1 = -1', 'Position', [5, 85, 215, 20], 'Callback', @updateFromSliders, 'Value', 0);
-    hArmConfig3 = uicontrol('Style', 'checkbox', 'String', 'k_arm3 = -1', 'Position', [5, 65, 215, 20], 'Callback', @updateFromSliders, 'Value', 0);
+    hArmConfig1 = uicontrol('Style', 'checkbox', 'String', 'k_arm1 = -1', 'Position', [5, 85, 215, 20], 'Callback', @updateFrom3DMous, 'Value', 0);
+    hArmConfig3 = uicontrol('Style', 'checkbox', 'String', 'k_arm3 = -1', 'Position', [5, 65, 215, 20], 'Callback', @updateFrom3DMous, 'Value', 0);
 	hXText = uicontrol('Style', 'text', 'Position', [5 45 80 20], 'String', 'X', 'ForegroundColor', brighten([1 0 0], -0.5));
     hYText = uicontrol('Style', 'text', 'Position', [5 25 80 20], 'String', 'Y', 'ForegroundColor', brighten([0 1 0], -0.5));
     hZText = uicontrol('Style', 'text', 'Position', [5 5 80 20], 'String', 'Z', 'ForegroundColor', brighten([0 0 1], -0.5));
-    hPhiText = uicontrol('Style', 'text', 'Position', [85 45 80 20], 'String', 'φ', 'ForegroundColor', brighten([0 0 0], -0.5));
-    hGammaText = uicontrol('Style', 'text', 'Position', [85 25 80 20], 'String', 'γ', 'ForegroundColor', brighten([0 0 0], -0.5));    
+    hPhiText = uicontrol('Style', 'text', 'Position', [85 45 80 20], 'String', 'pitch', 'ForegroundColor', brighten([0 0 0], -0.5));
+    hGammaText = uicontrol('Style', 'text', 'Position', [85 25 80 20], 'String', 'roll', 'ForegroundColor', brighten([0 0 0], -0.5));    
 	
     % init 3D mous
     if ~spnav('open')
@@ -62,11 +62,12 @@ function ik_3DMouse()
     run = true;
     while run
     updateFrom3DMous();	
-    pause(0.1);
+    pause(0.2);
     end
 
 
-	function updateFrom3DMous(varargin)		
+	function updateFrom3DMous(varargin)	
+        printData = false;
         res = spnav();
 		x = res.trans(1);
 		y = res.trans(3);
@@ -74,46 +75,35 @@ function ik_3DMouse()
 		rx = res.rot(1);
 		ry = res.rot(3);
 		rz = res.rot(2);
-		fprintf('x/y/z = %5.2f/%5.2f/%5.2f, rx/ry/rz = %5.2f/%5.2f/%5.2f', x, y, z, rx, ry, rz);
-        for i = 1:numel(res.buttons)
-			if res.buttons(i)
-				if res.pressEvents(i) > 0
-					fprintf(', button %d pressed', i);
-				else fprintf(', button %d down', i);
-				end
-			elseif res.releaseEvents(i) > 0
-				fprintf(', button %d released', i);
-			end				
-        end
-		fprintf('\n');
-        if res.pressEvents(1) > 0
-            closeHandler(ax); 
-            return
-        end
-        
+		        
         % parameter for tuning 3D mouse sencitivity
-        kv=0.1;
+        kv=0.08;
         if abs(x)>=minTrans
+            printData = true;
             px = x0+kv*x;
         else
             px = x0;
         end
         if abs(y)>=minTrans
+            printData = true;
             py = y0+kv*y;
         else
             py = y0;
         end
         if abs(z)>=minTrans
+            printData = true;
             pz = z0+kv*z;
         else
             pz = z0;
         end
         if abs(ry)>=minRot
+            printData = true;
             phi = phi0+kv*ry;
         else
             phi = phi0;
         end
         if abs(rz)>=minRot
+            printData = true;
             gamma = gamma0+kv*rz;
         else
             gamma = gamma0;
@@ -125,13 +115,28 @@ function ik_3DMouse()
         phi0 = phi;
         gamma0 = gamma;
         
-        % show values
+        % show values in figure window
         set(hXText, 'String', sprintf('X = %0.2f cm', px));
         set(hYText, 'String', sprintf('Y = %0.2f cm', py));
         set(hZText, 'String', sprintf('Z = %0.1f cm', pz));
-        set(hPhiText, 'String', sprintf('φ = %0.0f°', phi * 180 / pi));
-        set(hGammaText, 'String', sprintf('γ = %0.0f°', gamma * 180 / pi));
-    
+        set(hPhiText, 'String', sprintf('pitch = %0.0f°', phi * 180 / pi));
+        set(hGammaText, 'String', sprintf('roll = %0.0f°', gamma * 180 / pi));
+        
+        % print input data in command window
+        if printData == true
+            fprintf('x/y/z = %5.2f/%5.2f/%5.2f, rx/ry/rz = %5.2f/%5.2f/%5.2f\n', x, y, z, rx, ry, rz);
+        end
+        for i = 1:numel(res.buttons)
+			if res.buttons(i)
+				if res.pressEvents(i) > 0
+					fprintf('button %d pressed\n', i);
+				else fprintf('button %d down\n', i);
+				end
+			elseif res.releaseEvents(i) > 0
+				fprintf('button %d released\n', i);
+			end				
+        end
+
         if get(hArmConfig1, 'Value') == 1
             k_Arm1 = -1;
         else k_Arm1 = 1;
@@ -142,22 +147,47 @@ function ik_3DMouse()
         else k_Arm3 = 1;
         end
         
+        % Button 1 to terminate the program
+        if res.pressEvents(1) > 0
+            closeHandler(ax); 
+            return
+        end
+        
+         % Button 2 to reset to home position
+        if res.pressEvents(2) > 0
+            px = -5;
+            py = 0;
+            pz = 44;
+            phi = 65 * pi / 180;
+            gamma = 0;
+            
+            x0 = px;
+            y0 = py;
+            z0 = pz;
+            phi0 = phi;
+            gamma0 = gamma;
+        end
+        
         % calculate inverse kinematics
         jointarray = ik_Youbot(px,py,pz,phi,gamma,k_Arm1,k_Arm3);
         
-        % solution valid check
-        if numel(jointarray)~=5
-            return
-        end
-%         solution_valid = isSolutionValid(jointarray);
         
-%         if solution_valid        
-%             % apply 
-%             robot.setJoins(jointarray(1), jointarray(2), jointarray(3), jointarray(4), jointarray(5));
-%         else
-%             errordlg('Inverse Kinematics solver failed!');
-%         end
-        robot.setJoins(jointarray(1), jointarray(2), jointarray(3), jointarray(4), jointarray(5));
+        solution_valid = isSolutionValid(jointarray);
+        
+        if solution_valid        
+            % apply 
+            robot.setJoins(jointarray(1), jointarray(2), jointarray(3), jointarray(4), jointarray(5));
+        else
+%             errordlg('Inverse Kinematics solver failed! Reset to start position');
+            uiwait(warn);
+            % reset to start position
+            x0 = -5;
+            y0 = 0;
+            z0 = 44;
+            phi0 = 65 * pi / 180;
+            gamma0 = 0;
+        end
+        
     end
 
     function [theta] = ik_Youbot(gx,gy,gz,gphi,ggamma,jointconfig1,jointconfig3)
@@ -182,8 +212,7 @@ function ik_3DMouse()
         
         % check if the goal positon can be reached
         if sqrt(pt_x^2+pt_y^2)>(a2+a3+d5)
-            errordlg('Out of work space!');
-            uiwait;
+            warn = errordlg('Out of work space!');
             theta=[];
             return
         end
@@ -194,8 +223,7 @@ function ik_3DMouse()
         
         % check if the goal position can be reached at all
         if sqrt(pw_x^2 + pw_y^2)>(a2+a3) || sqrt(pw_x^2 + pw_y^2)<abs(a2-a3)
-            errordlg('goal position cannot be reached!');
-            uiwait;
+            warn = errordlg('goal position cannot be reached!');
             theta=[];
             return
         end
@@ -266,11 +294,11 @@ function ik_3DMouse()
             solution_valid = false;
             return
         end
-        for i=1:5
-            if theta(i)<min_angles(i) ||theta(i)>max_angles(i)
-                solution_valid = false;
-                return
-            end
-        end
+%         for i=1:5
+%             if theta(i)<min_angles(i) ||theta(i)>max_angles(i)
+%                 solution_valid = false;
+%                 return
+%             end
+%         end
     end
 end
