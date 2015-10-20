@@ -1,4 +1,8 @@
 % inverse kinematics with input from 3D mouse 
+% rz: roll
+% ry: pitch
+% Button1: terminate
+% Button2: reset
 function ik_3DMouse()
 	clc;
 	clear all;
@@ -7,6 +11,7 @@ function ik_3DMouse()
 
     % global varibles
     global max_angles min_angles d1 a1 a2 a3 d5
+    global warn
     
     max_angles = deg2rad([169, 155, 151, 102.5, 167.5]);
     min_angles = deg2rad([-169, 0 -146, -102.5, -167.5]);
@@ -92,7 +97,7 @@ function ik_3DMouse()
         end
         if abs(z)>=minTrans
             printData = true;
-            pz = z0+kv*z;
+            pz = z0+1.5*kv*z;
         else
             pz = z0;
         end

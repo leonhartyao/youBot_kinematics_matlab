@@ -22,24 +22,29 @@ function robot = youBot(d1, a1, a2, a3, d5)
 	robot.org1 = triade(T_unity(), [], 4, 0.1);
 	robot.link1 = createObject(transform(T_shift(-1.5, -d1, -width/2), geoBox(3, d1, width)));
     robot.link1.setWireframeColor([0 0.2 0]);
+    robot.joint1 = createObject(transform(T_shift(0, 0, -width/2), geoCylinder(2, width)), 'FaceColor', [0 0 0]);
     
 	robot.org2 = triade(T_unity(), [], 4, 0.1);
     robot.link2 = createObject(transform(T_shift(-a2, -1.5, -0.7*width/2), geoBox(a2, 3, 0.7*width)));
     robot.link2.setWireframeColor([0 0.2 0]);
+    robot.joint2 = createObject(transform(T_shift(0, 0, -0.7*width/2), geoCylinder(2, 0.7*width)), 'FaceColor', [0 0 0]);
 
 	robot.org3 = triade(T_unity(), [], 4, 0.1);
 	robot.link3 = createObject(transform(T_shift(-a3, -1.5, -0.5*width/2), geoBox(a3, 3, 0.5*width)));
     robot.link3.setWireframeColor([0 0.2 0]);
+    robot.joint3 = createObject(transform(T_shift(0, 0, -0.5*width/2), geoCylinder(2, 0.5*width)), 'FaceColor', [0 0 0]);
 
 	robot.org4 = triade(T_unity(), [], 6, 0.1);
+    robot.link4 = createObject(transform(T_shift(-0.3*width/2, -1.5, 0), geoBox(0.3*width, 3, d5-3)));
+    robot.link4.setWireframeColor([0 0.2 0]);
+    robot.joint4 = createObject(transform(T_shift(0, 0, -(0.5*width+3)), geoCylinder(2, 0.5*width)), 'FaceColor', [0 0 0]);
     
     robot.org5 = triade(T_unity(), [], 4, 0.1);
-	link4_1 = createObject(transform(T_shift(-0.3*width/2, -1.5, -d5), geoBox(0.3*width, 3, d5-3)));
-    link4_2 = createObject(transform(T_shift(-0.5, -3, -3), geoBox(1, 6, 1)));
-    link4_3 = createObject(transform(T_shift(-0.5, 2, -2), geoBox(1, 1, 2)));
-    link4_4 = createObject(transform(T_shift(-0.5, -3, -2), geoBox(1, 1, 2)));
-    robot.link4 = createObjectGroup(link4_1,link4_2,link4_3,link4_4);
-    robot.link4.setWireframeColor([0 0.2 0]);
+    link5_1 = createObject(transform(T_shift(-0.5, -3, -3), geoBox(1, 6, 1)));
+    link5_2 = createObject(transform(T_shift(-0.5, 2, -2), geoBox(1, 1, 2)));
+    link5_3 = createObject(transform(T_shift(-0.5, -3, -2), geoBox(1, 1, 2)));
+    robot.link5 = createObjectGroup(link5_1,link5_2,link5_3);
+    robot.link5.setWireframeColor([0 0.2 0]);
     
     
     robot.setJoins = @setJoins;
@@ -55,7 +60,11 @@ function robot = youBot(d1, a1, a2, a3, d5)
  		robot.link2.setTransparency(t);
  		robot.link3.setTransparency(t);
  		robot.link4.setTransparency(t);
-%  		robot.link5.setTransparency(t);
+ 		robot.link5.setTransparency(t);
+        robot.joint1.setTransparency(t);
+        robot.joint2.setTransparency(t);
+        robot.joint3.setTransparency(t);
+        robot.joint4.setTransparency(t);
 	end
 	robot.colorLinks = @colorLinks;
 	function colorLinks(varargin)
@@ -70,7 +79,7 @@ function robot = youBot(d1, a1, a2, a3, d5)
 		robot.org3.setColor(varargin{1 + mod(3, nargin)});		
 		robot.link4.setFaceColor(varargin{1 + mod(4, nargin)});		
 		robot.org4.setColor(varargin{1 + mod(4, nargin)});		
-% 		robot.link5.setFaceColor(varargin{1 + mod(5, nargin)});		
+		robot.link5.setFaceColor(varargin{1 + mod(5, nargin)});		
 		robot.org5.setColor(varargin{1 + mod(5, nargin)});
 	end
 	robot.showOrigins = @()cellfun(@(o)o.show(), {robot.org0, robot.org1, robot.org2, robot.org3, robot.org4, robot.org5});
@@ -94,18 +103,23 @@ function robot = youBot(d1, a1, a2, a3, d5)
 		
 		robot.org1.place(T_1_0);
 		robot.link1.place(T_1_0);
+        robot.joint1.place(T_1_0);
 		T_2_0 = T_1_0 * T_2_1;
 		robot.org2.place(T_2_0);
 		robot.link2.place(T_2_0);
+        robot.joint2.place(T_2_0);
 		T_3_0 = T_2_0 * T_3_2;
 		robot.org3.place(T_3_0);
 		robot.link3.place(T_3_0);
+        robot.joint3.place(T_3_0);
 		T_4_0 = T_3_0 * T_4_3;
  		robot.org4.place(T_4_0);
-
+        robot.link4.place(T_4_0);
+     
 		T_5_0 = T_4_0 * T_5_4;
 		robot.org5.place(T_5_0);
-		robot.link4.place(T_5_0);
+		robot.link5.place(T_5_0);
+        robot.joint4.place(T_5_0);
 		
 		tcp = transform(T_5_0, [0 0 0]);
 	end
