@@ -16,7 +16,7 @@ function ik_3DMouse()
     max_angles = deg2rad([169, 155, 151, 102.5, 167.5]);
     min_angles = deg2rad([-169, 0 -146, -102.5, -167.5]);
     
-	d1 = 14.7;
+    d1 = 14.7;
     a1 = 3.3;
     a2 = 15.5;
     a3 = 13.5;
@@ -69,6 +69,7 @@ function ik_3DMouse()
     updateFrom3DMous();	
     pause(0.2);
     end
+    close(gcf);
 
 
 	function updateFrom3DMous(varargin)	
