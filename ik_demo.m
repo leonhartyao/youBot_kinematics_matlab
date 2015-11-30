@@ -39,9 +39,9 @@ function ik_demo()
     updateFromSliders();	        
 
 	function [hSlider, hText, hCaption] = createSlider(text, x, y, minimum, maximum, initialValue, callback, color)		
-		hCaption = uicontrol('Style', 'text', 'Position', [x y 20 20], 'String', text, 'ForegroundColor', brighten(color, -0.5));
-		hSlider = uicontrol('Style', 'slider', 'Position', [x + 20, y, 250, 20], 'Min', minimum, 'Max', maximum, 'Value', initialValue, 'Callback', callback);
-		hText = uicontrol('Style', 'text', 'Position', [x + 270, y, 70, 20]);
+		hCaption = uicontrol('Style', 'text', 'Position', [x y 40 20], 'String', text, 'ForegroundColor', brighten(color, -0.5));
+		hSlider = uicontrol('Style', 'slider', 'Position', [x + 40, y, 250, 20], 'Min', minimum, 'Max', maximum, 'Value', initialValue, 'Callback', callback);
+		hText = uicontrol('Style', 'text', 'Position', [x + 290, y, 70, 20]);
 	end
 
 	function updateFromSliders(varargin)		
