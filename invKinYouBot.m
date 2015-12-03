@@ -15,8 +15,8 @@ function ik_demo()
     % global varibles
     global max_angles min_angles d1 a1 a2 a3 d5
     
-    max_angles = deg2rad([169, 155, 151, 102.5, 167.5]);
-    min_angles = deg2rad([-169, 0 -146, -102.5, -167.5]);
+    max_angles = [169, 155, 151, 102.5, 167.5].*pi/180;
+    min_angles = [-169, 0 -146, -102.5, -167.5].*pi/180;
     
 	d1 = 14.7;
     a1 = 3.3;
