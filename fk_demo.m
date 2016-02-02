@@ -43,7 +43,7 @@ function fk_demo()
 
 	function updateFromSliders(varargin)		
 		thetas = arrayfun(@(hs)get(hs, 'Value'), [hTheta1Slider, hTheta2Slider, hTheta3Slider, hTheta4Slider, hTheta5Slider]);
-		arrayfun(@(th, v)set(th, 'String', sprintf('%.1f', v)), [hTheta1Text, hTheta2Text, hTheta3Text, hTheta4Text, hTheta5Text], thetas);
+		arrayfun(@(th, v)set(th, 'String', sprintf('%.1f°', v)), [hTheta1Text, hTheta2Text, hTheta3Text, hTheta4Text, hTheta5Text], thetas);
 
 		thetas = thetas * (pi / 180);   % convert to rad
 		robot.setJoins(thetas(1), thetas(2), thetas(3), thetas(4), thetas(5));
