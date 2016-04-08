@@ -2,51 +2,35 @@
 clear all;
 clc;
 
-s1=sym('s1');
-c1=sym('c1');
-s2=sym('s2');
-c2=sym('c2');
-s3=sym('s3');
-c3=sym('c3');
-s4=sym('s4');
-c4=sym('c4');
-s5=sym('s5');
-c5=sym('c5');
-a1=sym('a1');
-a2=sym('a2');
-a3=sym('a3');
-d1=sym('d1');
-d5=sym('d5');
-c23=sym('c23');
-s23=sym('s23');
-c234=sym('c234');
-s234=sym('s234');
 
-T_54 = [c5, -s5, 0, 0;...
-        s5, c5, 0, 0;...
-        0, 0, 1, d5;...
-        0, 0, 0, 1];
-T_43 = [-s4, 0, c4, 0;...
-        c4, 0, s4, 0;...
-        0, 1, 0, 0;...
-        0, 0, 0, 1];
-T_32 = [c3, -s3, 0, a3*c3;...
-        s3, c3, 0, a3*s3;...
-        0, 0, 1, 0;...
-        0, 0, 0, 1];
-T_21 = [c2, -s2, 0, a2*c2;...
-        s2, c2, 0, a2*s2;...
-        0, 0, 1, 0;...
-        0, 0, 0, 1];
-T_10 = [c1, 0, s1, a1*c1;...
-        s1, 0, -c1, a1*s1;...
-        0 1 0 d1;...
-        0 0 0 1];
-    
-T_20 = T_10 * T_21;
-T_30 = T_10 * T_21 * T_32;
-T_40 = T_10 * T_21 * T_32 * T_43;
-T_50 = T_10 * T_21 * T_32 * T_43 * T_54;
+syms t1 t2 t3 t4 t5 d1 d5 a1 a2 a3;
+theta = [t1; t2+0.5*pi; t3; t4-0.5*pi; t5];
+d = [d1;0;0;0;d5];
+a = [a1;a2;a3;0;0];
+alpha = [0.5*pi;0;0;-0.5*pi;0];
+T = cell(5,1);
+
+for i = 1:5
+    salpha = sin(alpha(i));
+    if abs(salpha) < 1e-7
+        salpha = 0;
+    end
+    calpha = cos(alpha(i));
+    if abs(calpha) < 1e-7
+        calpha = 0;
+    end
+    temp = [cos(theta(i)), -sin(theta(i))*calpha, sin(theta(i))*salpha, a(i)*cos(theta(i));...
+            sin(theta(i)), cos(theta(i))*calpha, -cos(theta(i))*salpha, a(i)*sin(theta(i));...
+            0, salpha, calpha, d(i);...
+            0, 0, 0, 1];
+    T{i} = simplify(temp);
+end
+
+T_10 = T{1};    
+T_20 = simplify(T_10 * T{2});
+T_30 = simplify(T_20 * T{3});
+T_40 = simplify(T_30 * T{4});
+T_50 = simplify(T_40 * T{5});
 
 z0=[0;0;1];
 p0=[0;0;0];

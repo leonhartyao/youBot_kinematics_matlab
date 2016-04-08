@@ -10,7 +10,7 @@ function robot = youBot(d1, a1, a2, a3, d5)
 %     d5 = 21.75;
 %     ax = createStage([-60 60 -60 60 -30 70], [-38 29]);
 %     set(ax, 'CameraUpVector', [1 0 0], 'CameraPosition', [12, 15, -3], 'CameraTarget', [1 0 5]);
-    
+
 
 	robot = struct();
 	robot.org0 = triade(T_unity(), [], 4, 0.1);
@@ -85,7 +85,7 @@ function robot = youBot(d1, a1, a2, a3, d5)
 	robot.showOrigins = @()cellfun(@(o)o.show(), {robot.org0, robot.org1, robot.org2, robot.org3, robot.org4, robot.org5});
 	robot.hideOrigins = @()cellfun(@(o)o.hide(), {robot.org0, robot.org1, robot.org2, robot.org3, robot.org4, robot.org5});
 	
-	setJoins(0, 155*(pi/180), -146*(pi/180), 102.5*(pi/180), 0);
+	setJoins(0, 40*(pi/180), -80*(pi/180), -50*(pi/180), 0);
 	
 	function setJoins(theta1, theta2, theta3, theta4, theta5)
 		if nargin == 1 && numel(theta1) == 5
@@ -96,9 +96,9 @@ function robot = youBot(d1, a1, a2, a3, d5)
 			theta1 = theta1(1);
 		end
 		T_1_0 = T_dh(theta1, d1, a1, pi/2);
-		T_2_1 = T_dh(theta2, 0, a2, 0);
+		T_2_1 = T_dh(theta2 + pi/2, 0, a2, 0);
 		T_3_2 = T_dh(theta3, 0, a3, 0);
-		T_4_3 = T_dh(theta4 + pi/2, 0, 0, pi/2);
+		T_4_3 = T_dh(theta4 - pi/2, 0, 0, -pi/2);
 		T_5_4 = T_dh(theta5, d5, 0, 0);
 		
 		robot.org1.place(T_1_0);
